@@ -7,3 +7,6 @@ It is essentially the work in progress section.
 
 Note that inputs_code has been renamed to CROSS to reflect the name as presented at the end of the semester.
 Documentation should be updated to reflect this.
+
+Active development should occur within the dev branch, with finished results committed to the testing branch.
+Once those are fully tested, they should be pushed to the master tool.
