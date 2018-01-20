@@ -18,7 +18,7 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 		
 
 		
-    def processRaster(self,output, User_Field_Count, Class_List, User_Field, Fields_List):
+    def processRaster(self,output, User_Field_Count, Class_List, User_Field, Fields_List, Window_Overlap):
 	arcpy.AddMessage("Processing raster.")
 	fc = output  #this is the path to shapefile made by the user in the tool box
 	arcpy.env.overwriteOutput = True
@@ -92,7 +92,7 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 							x += self.__frameX #adjust counter for positive condition
 							continue #back to beginning of while loop
 
-						x = int(x) + int(float(self.__frameX)//2)#move half a frame "right"...case when previous frame invalid "Fast option"
+						x = int(x) + int(float(self.__frameX)*Window_Overlap)#move half a frame "right"...case when previous frame invalid "Fast option"
 						#Replace 2 with a speed factor at a later point
 
 						time_counter += 1
