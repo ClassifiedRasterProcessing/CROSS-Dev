@@ -125,7 +125,7 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 							#arcpy.AddMessage("Debug value...time_taken = " + str(time_taken))
 				except:
 					arcpy.AddMessage("Frame failed to process.")
-					error_count += 1
+					error_count += 1	
 				y = float(y) + int(float(self.__frameY)//2)#move half a frame "up" ... "Fast option"	Replace 2 with a speed factor at a later point
 		except:
 			error_count += 1
