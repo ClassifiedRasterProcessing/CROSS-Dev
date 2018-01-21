@@ -57,9 +57,9 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 	
 	totalFrames = int(xDiff * yDiff)
 	
-	start_time = time.clock()
-	run_time = 0
-	time_counter = 0
+	#start_time = time.clock()
+	#run_time = 0
+	#time_counter = 0
 	error_count = 0
 	try:
 		#arcpy.AddMessage("y = " +str(y))
@@ -92,33 +92,33 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 							x += self.__frameX #adjust counter for positive condition
 							continue #back to beginning of while loop
 
-						x = int(x) + int(float(self.__frameX)*Window_Overlap)#move half a frame "right"...case when previous frame invalid "Fast option"
+						x = int(x) + int(float(self.__frameX)//2)#move half a frame "right"...case when previous frame invalid "Fast option"
 						#Replace 2 with a speed factor at a later point
 
-						time_counter += 1
-						hours = 0
-						minutes = 0
-						try:
-							if (time_counter % 10) == 0:
-								time_taken = round(time.clock() - start_time,2) #calculating runtime
-								time_left = (time_taken//frameCount) * (totalFrames - frameCount)#average time * frames left				
-								try:
-									if time_left >= 3600:
-										hours = str(time_left//3600) + " hours "
-										time_left = time_left % 3600
+						#time_counter += 1
+						#hours = 0
+						#minutes = 0
+						#try:
+							#if (time_counter % 10) == 0:
+								#time_taken = round(time.clock() - start_time,2) #calculating runtime
+								#time_left = (time_taken//frameCount) * (totalFrames - frameCount)#average time * frames left				
+								#try:
+									#if time_left >= 3600:
+										#hours = str(time_left//3600) + " hours "
+										#time_left = time_left % 3600
 
-									if time_left >= 60:	
-										minutes = str(time_left//60) + " minutes "
-										time_left = str((time_left % 60)//1) + " seconds "
-								except:
-									arcpy.AddMessage("Formatting time failed.")
-								arcpy.AddMessage("Approximately " + hours + minutes + time_left + "remaining.")#outputting time left
+									#if time_left >= 60:	
+										#minutes = str(time_left//60) + " minutes "
+										#time_left = str((time_left % 60)//1) + " seconds "
+								#except:
+									#arcpy.AddMessage("Formatting time failed.")
+								#arcpy.AddMessage("Approximately " + hours + minutes + time_left + "remaining.")#outputting time left
 								#Worked for awhile, then stopped with no changes to this section and I'm not sure why...
 								#debug messages indicate time_taken and time_left are properly calculated, and the backup still outputs a reasonable time left
-						except:
-							time_taken = round(time.clock() - start_time,2)#runtime
-							time_left = (time_taken//frameCount) * (totalFrames - frameCount)#average time * frames left
-							arcpy.AddMessage("Approximately " + time_left + " seconds remaining.")
+						#except:
+							#time_taken = round(time.clock() - start_time,2)#runtime
+							#time_left = (time_taken//frameCount) * (totalFrames - frameCount)#average time * frames left
+							#arcpy.AddMessage("Approximately " + time_left + " seconds remaining.")
 							#arcpy.AddMessage("Error formatting remaining time.")
 							#time_taken = round(time.clock() - start_time,2) #calculating runtime
 							#arcpy.AddMessage("Debug value...time_left = " + str(time_left))
@@ -132,17 +132,17 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 		del cursor #prevent data corruption by deleting cursor when finished
 		#arcpy.AddMessage("Total runtime: " + runtime)#outputs total runtime	Arc Map already does this			 
 	except:
-		#arcpy.AddMessage("Failed to process raster.")
+		arcpy.AddMessage("Failed to process raster.")
 		
-	try:
-		template_location = arcpy.env.workspace + "Template.lyr"
-		template_layer = arcpy.mapping.Layer(template_location)#file path of the template layer file (.lyr, .lyrx for Arc Pro)
-		template_layer.transparency = 50# Apply transparency to template
-		try:
-			arcpy.ApplySymbologyFromLayer_management(fc,template_layer) #apply template symbology to output
-		except:
+	#try:
+		#template_location = arcpy.env.workspace + "Template.lyr"
+		#template_layer = arcpy.mapping.Layer(template_location)#file path of the template layer file (.lyr, .lyrx for Arc Pro)
+		#template_layer.transparency = 50# Apply transparency to template
+		#try:
+			#arcpy.ApplySymbologyFromLayer_management(fc,template_layer) #apply template symbology to output
+		#except:
 			#arcpy.AddMessage("Symbology not applied.")
-	except:
+	#except:
 		#arcpy.AddMessage("Error applying Template at " + arcpy.env.workspace + r"\Template.lyr")
 		
 	arcpy.AddMessage("Finished processing raster.\n" + str(validFrameCount) + " valid frames found.\n" + str(error_count) + " errors while processing.")
