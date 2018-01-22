@@ -92,8 +92,7 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 							x += self.__frameX #adjust counter for positive condition
 							continue #back to beginning of while loop
 
-						x = int(x) + int(float(self.__frameX)*Window_Overlap)#move half a frame "right"...case when previous frame invalid "Fast option"
-						#Replace 2 with a speed factor at a later point
+						x = int(x) + int(float(self.__frameX)*Window_Overlap)#move user-determined distance to the side
 
 						time_counter += 1
 						hours = 0
@@ -126,7 +125,7 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 				except:
 					arcpy.AddMessage("Frame failed to process.")
 					error_count += 1
-				y = float(y) + int(float(self.__frameY)//2)#move half a frame "up" ... "Fast option"	Replace 2 with a speed factor at a later point
+				y = float(y) + int(float(self.__frameY)*Window_Overlap)#move user-determined distance up
 		except:
 			error_count += 1
 		del cursor #prevent data corruption by deleting cursor when finished
