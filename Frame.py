@@ -48,8 +48,8 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 	validFrameCount = 0
 	
 	#fixing total frame calculation
-	yDiff = ((self.__max_y-self.__min_y)/self.__frameY*int(Window_Overlap))
-	xDiff = ((self.__max_x-self.__min_x)/self.__frameX*int(Window_Overlap))
+	yDiff = ((self.__max_y-self.__min_y)/self.__frameY/float(Window_Overlap))
+	xDiff = ((self.__max_x-self.__min_x)/self.__frameX/float(Window_Overlap))
 	if yDiff %1 != yDiff:
 		yDiff += 1
 	if xDiff %1 != xDiff:
@@ -92,8 +92,8 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 							x += self.__frameX #adjust counter for positive condition
 							continue #back to beginning of while loop
 
-						x = int(x) + int(float(self.__frameX)//int(Window_Overlap))#move half a frame "right"...case when previous frame invalid "Fast option"
-						arcpy.AddMessage("X window size"+str(x))
+						x = int(x) + int(float(self.__frameX)*float(Window_Overlap))#move half a frame "right"...case when previous frame invalid "Fast option"
+						#arcpy.AddMessage("X window size"+str(x))
 						#Replace 2 with a speed factor at a later point
 
 						#time_counter += 1
@@ -127,8 +127,8 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 				except:
 					arcpy.AddMessage("Frame failed to process.")
 					error_count += 1	
-				y = float(y) + int(float(self.__frameY)//int(Window_Overlap))#move half a frame "up" ... "Fast option"	Replace 2 with a speed factor at a later point
-				arcpy.AddMessage("Y window size"+str(y))
+				y = float(y) + int(float(self.__frameY)*float(Window_Overlap))#move half a frame "up" ... "Fast option"	Replace 2 with a speed factor at a later point
+				#arcpy.AddMessage("Y window size"+str(y))
 		except:
 			error_count += 1
 		del cursor #prevent data corruption by deleting cursor when finished
