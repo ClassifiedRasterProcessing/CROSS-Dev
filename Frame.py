@@ -1,6 +1,6 @@
 #object definition for our frame class
 #output: feature class with polygon for each frame with its determined ratio value
-
+#Test GIT extensions
 import arcpy, collections, os, time
 
 class classifiedRaster: #class definition for the frames made from the whole raster
