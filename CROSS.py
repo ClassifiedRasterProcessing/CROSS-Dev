@@ -1,4 +1,5 @@
-import arcpy, Frame
+import arcpy, FrameMulti #Comment this out and use other import if multithreading is not working
+#import arcpy, Frame
 
 arcpy.env.workspace = arcpy.GetParameterAsText(0)      #this is where the files are to go
 input1= arcpy.GetParameterAsText(1)                    # this is where the feature class is put
