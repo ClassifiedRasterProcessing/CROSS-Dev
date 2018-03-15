@@ -109,17 +109,17 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 			#arcpy.AddMessage("Failed to process raster.")
 			
 		try:
-			template_location = arcpy.env.workspace + "Template.lyr"
-			template_layer = arcpy.mapping.Layer(template_location)#file path of the template layer file (.lyr, .lyrx for Arc Pro)
-			template_layer.transparency = 50# Apply transparency to template
+			#template_location = arcpy.env.workspace + "Template.lyr"
+			#template_layer = arcpy.mapping.Layer(template_location)#file path of the template layer file (.lyr, .lyrx for Arc Pro)
+			#template_layer.transparency = 50# Apply transparency to template
 			try:
-				arcpy.ApplySymbologyFromLayer_management(fc,template_layer) #apply template symbology to output
+				#arcpy.ApplySymbologyFromLayer_management(fc,template_layer) #apply template symbology to output
 			except:
 				#arcpy.AddMessage("Symbology not applied.")
 		except:
 			#arcpy.AddMessage("Error applying Template at " + arcpy.env.workspace + r"\Template.lyr")
 			
-		arcpy.AddMessage("Finished processing raster.\n" + str(validFrameCount) + " valid frames found.\n" + str(error_count) + " errors while processing.")
+		#arcpy.AddMessage("Finished processing raster.\n" + str(validFrameCount) + " valid frames found.\n" + str(error_count) + " errors while processing.")
 		#runtime = "%s seconds." % (round(time.clock() - start_time,2))#Calculates runtime
 		#arcpy.AddMessage("Total runtime: " + runtime)#outputs runtime..Arc Map already does this
 				
@@ -127,6 +127,8 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 		processName = multiprocessing.current_process() #returns worker name and other status information
 		processFrame = frame + processName[20] #should return worker number and fix overwrite issue
 		arcpy.Clip_management(self.__inras,rectangle, processFrame)#create frame -> clip out a section of the main raster 
+		arcpy.AddMessage("Process " + processName[20] + " has clipped frame " + rectangle)
+		
 		
 		x = float(arcpy.GetRasterProperties_management(in_ras, "LEFT").getOutput(0))
 		y = float(arcpy.GetRasterProperties_management(in_ras, "BOTTOM").getOutput(0))
@@ -138,6 +140,7 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 			lat = y+self.__frameY/2
 			long = x+self.__frameX/2
 			cursor.insertRow([polygon,validRatio, lat, long]) #add frame to feature class with calculated attributes
+			arcpy.AddMessage("Process " + processName[20] + " has found valid frame at " + rectangle)
 
 		
 				
