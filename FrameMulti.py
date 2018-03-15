@@ -7,20 +7,18 @@ from multiprocessing.dummy import Pool as ThreadPool #Multithreading using map a
 
 class classifiedRaster: #class definition for the frames made from the whole raster
     
-    def __init__(self, in_ras, in_sizeX, in_sizeY, in_ratio,in_classification): #inputs: main raster, frame size (5m x 10m), ratio (80%), and desired classification (weeds).
-        self.__inras = in_ras
-        self.__frameX = float(in_sizeX)
-        self.__frameY = float(in_sizeY)
-        self.__frame_ratio = float(in_ratio)
-        self.__in_class = in_classification
-        self.__max_y = float(arcpy.GetRasterProperties_management(in_ras, "TOP").getOutput(0))
-        self.__min_y = float(arcpy.GetRasterProperties_management(in_ras, "BOTTOM").getOutput(0))
-        self.__max_x = float(arcpy.GetRasterProperties_management(in_ras, "RIGHT").getOutput(0))
-        self.__min_x = float(arcpy.GetRasterProperties_management(in_ras, "LEFT").getOutput(0))
-		
+	def __init__(self, in_ras, in_sizeX, in_sizeY, in_ratio,in_classification): #inputs: main raster, frame size (5m x 10m), ratio (80%), and desired classification (weeds).
+		self.__inras = in_ras
+		self.__frameX = float(in_sizeX)
+		self.__frameY = float(in_sizeY)
+		self.__frame_ratio = float(in_ratio)
+		self.__in_class = in_classification
+		self.__max_y = float(arcpy.GetRasterProperties_management(in_ras, "TOP").getOutput(0))
+		self.__min_y = float(arcpy.GetRasterProperties_management(in_ras, "BOTTOM").getOutput(0))
+		self.__max_x = float(arcpy.GetRasterProperties_management(in_ras, "RIGHT").getOutput(0))
+		self.__min_x = float(arcpy.GetRasterProperties_management(in_ras, "LEFT").getOutput(0))
 
-		
-    def processRaster(self,output, User_Field_Count, Class_List, User_Field, Fields_List, Window_Overlap):
+	def processRaster(self,output, User_Field_Count, Class_List, User_Field, Fields_List, Window_Overlap):
 		arcpy.AddMessage("Processing raster.")
 		fc = output  #this is the path to shapefile made by the user in the tool box
 		arcpy.env.overwriteOutput = True
