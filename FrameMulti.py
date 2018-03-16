@@ -103,7 +103,7 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 			arcpy.AddMessage("Frames processed")
 			del cursor #prevent data corruption by deleting cursor when finished		 
 		except:
-<<<<<<< HEAD
+
 			#arcpy.AddMessage("Failed to process raster.")
 			
 		#try:
@@ -141,7 +141,7 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 			arcpy.AddMessage("Process " + processName[20] + " has found valid frame at " + rectangle)
 
 		
-=======
+
 			arcpy.AddMessage("Failed to process raster. Exception 1")
 				
 	def processFrame(cursor, rectangle, frame, User_Field_Count, Class_List, User_Field, Fields_List): #needs to create the frame and add it using cursor if valid
@@ -167,7 +167,7 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 				arcpy.AddMessage("Failed to process frame. Exception 1")
 		except:
 			arcpy.AddMessage("Failed to process frame. Exception 2")
->>>>>>> 7df034667019abf4d7517e05507e64853a95fab6
+
 				
 def density(inras, ratio, inclass, User_Field_Count, Class_List, User_Field_Value,Fields_List): #determines ratio of classification
 	fc = inras #Determines file path from user input
