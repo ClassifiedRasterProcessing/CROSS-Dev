@@ -62,8 +62,8 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 		time_counter = 0
 		error_count = 0
 		
-		# make the Pool of workers. Number can be adjusted. DO NOT MAKE MORE THAN 10 (Will break the file overwriting, potentially corrupt processing)
-		pool = ThreadPool(10) 
+		# make the Pool of workers. Number can be adjusted. DO NOT MAKE MORE THAN 10 (Will break the file overwriting, potentially corrupt processing. Can fix if needed)
+		pool = ThreadPool(3) 
 		
 		#results = pool.map(my_function, my_array) should be an array of valid frames, probably don't need to use results
 		#my_function = processFrame, my_array will be list of frames. Create array of arrays?
@@ -99,13 +99,11 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 			
 			
 			arcpy.AddMessage("Processing frames") #Potential overwrite issues since same frame location.
-			pool.starmap(processFrame,zip(itertools.repeat(cursor),rectArray, itertools.repeat(frame), itertools.repeat(User_Field_Count), itertools.repeat(Class_List), itertools.repeat(User_Field), itertools.repeat(Fields_List)))
+			pool.starmap(self.processFrame,zip(itertools.repeat(cursor),rectArray, itertools.repeat(frame), itertools.repeat(User_Field_Count), itertools.repeat(Class_List), itertools.repeat(User_Field), itertools.repeat(Fields_List)))
 			arcpy.AddMessage("Frames processed")
-			
-			results = pool.starmap(function, zip(itertools.repeat(constant), list_a)) #pass constants
-			del cursor #prevent data corruption by deleting cursor when finished
-			#arcpy.AddMessage("Total runtime: " + runtime)#outputs total runtime	Arc Map already does this			 
+			del cursor #prevent data corruption by deleting cursor when finished		 
 		except:
+<<<<<<< HEAD
 			#arcpy.AddMessage("Failed to process raster.")
 			
 		#try:
@@ -143,6 +141,33 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 			arcpy.AddMessage("Process " + processName[20] + " has found valid frame at " + rectangle)
 
 		
+=======
+			arcpy.AddMessage("Failed to process raster. Exception 1")
+				
+	def processFrame(cursor, rectangle, frame, User_Field_Count, Class_List, User_Field, Fields_List): #needs to create the frame and add it using cursor if valid
+		try:
+			processName = multiprocessing.current_process() #returns worker name and other status information
+			processFrame = frame + processName[20] #should return worker number and fix overwrite issue
+			arcpy.Clip_management(self.__inras,rectangle, processFrame)#create frame -> clip out a section of the main raster 
+			arcpy.AddMessage("Process " + processName[20] + " has clipped frame " + rectangle)
+			
+			
+			x = float(arcpy.GetRasterProperties_management(in_ras, "LEFT").getOutput(0))
+			y = float(arcpy.GetRasterProperties_management(in_ras, "BOTTOM").getOutput(0))
+			try:				
+				validFrame, validRatio = density(frame, self.__frame_ratio, self.__in_class, User_Field_Count, Class_List, User_Field, Fields_List) #run ratio function. Expect boolean T if frame meets ratio conditions, and actual ratio
+				if validFrame: #Case it passes
+					array = arcpy.Array([arcpy.Point(x, y), arcpy.Point(x, y + self.__frameY),arcpy.Point(x + self.__frameX, y + self.__frameY),arcpy.Point(x + self.__frameX, y)]) #creating the frame polygon
+					polygon = arcpy.Polygon(array)
+					lat = y+self.__frameY/2
+					long = x+self.__frameX/2
+					cursor.insertRow([polygon,validRatio, lat, long]) #add frame to feature class with calculated attributes
+					arcpy.AddMessage("Process " + processName[20] + " has found valid frame at " + rectangle)
+			except:
+				arcpy.AddMessage("Failed to process frame. Exception 1")
+		except:
+			arcpy.AddMessage("Failed to process frame. Exception 2")
+>>>>>>> 7df034667019abf4d7517e05507e64853a95fab6
 				
 def density(inras, ratio, inclass, User_Field_Count, Class_List, User_Field_Value,Fields_List): #determines ratio of classification
 	fc = inras #Determines file path from user input
