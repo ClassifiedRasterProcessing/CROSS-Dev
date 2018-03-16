@@ -69,82 +69,39 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 		#my_function = processFrame, my_array will be list of frames. Create array of arrays?
 		#list.append(elem) add next frame
 		rectArray = []
+	
 		try:
-			#arcpy.AddMessage("y = " +str(y))
-			#arcpy.AddMessage("max Y = " +str(self.__max_y))
-			try:
-				while(y < self.__max_y):#flow control based on raster size and requested frame size needed. Issue on edges, ask about.
-					x = float(self.__min_x) #set to left bound of in raster
-					#arcpy.AddMessage("Passed 1 while")
-					#arcpy.AddMessage("x = " +str(x))
-					#arcpy.AddMessage("max X = " +str(self.__max_x))
-					try:
-						while (x < self.__max_x): #"side to side" processing
-							#arcpy.AddMessage("Passed 2 while")				
-							rectangle = str(x) + " " + str(y) + " " + str(x + self.__frameX) + " " + str(y + self.__frameY) #bounds of our frame for the clip tool						
-							rectArray.append(rectangle) #add frame to array of frames
-							frameCount += 1 #updating processing counter, this might be broken with threading
-							
-							arcpy.AddMessage("Frame " + frameCount + " added to queue")
-							
-							x = int(x) + int(float(self.__frameX)*Window_Overlap)#move user-determined distance to the side
-
-					except:
-						arcpy.AddMessage("Frame failed to process.")
-						error_count += 1
-					y = float(y) + int(float(self.__frameY)*Window_Overlap)#move user-determined distance up
-			except:
-				error_count += 1
-			(self.__inras,rectangle, frame)
-			
-			
-			arcpy.AddMessage("Processing frames") #Potential overwrite issues since same frame location.
-			pool.starmap(self.processFrame,zip(itertools.repeat(cursor),rectArray, itertools.repeat(frame), itertools.repeat(User_Field_Count), itertools.repeat(Class_List), itertools.repeat(User_Field), itertools.repeat(Fields_List)))
-			arcpy.AddMessage("Frames processed")
-			del cursor #prevent data corruption by deleting cursor when finished		 
-		except:
-
-			#arcpy.AddMessage("Failed to process raster.")
-			
-		#try:
-			#template_location = arcpy.env.workspace + "Template.lyr"
-			#template_layer = arcpy.mapping.Layer(template_location)#file path of the template layer file (.lyr, .lyrx for Arc Pro)
-			#template_layer.transparency = 50# Apply transparency to template
-			#try:
-				#arcpy.ApplySymbologyFromLayer_management(fc,template_layer) #apply template symbology to output
-			#except:
-				#arcpy.AddMessage("Symbology not applied.")
-		#except:
-			#arcpy.AddMessage("Error applying Template at " + arcpy.env.workspace + r"\Template.lyr")
-			
-		#arcpy.AddMessage("Finished processing raster.\n" + str(validFrameCount) + " valid frames found.\n" + str(error_count) + " errors while processing.")
-		#runtime = "%s seconds." % (round(time.clock() - start_time,2))#Calculates runtime
-		#arcpy.AddMessage("Total runtime: " + runtime)#outputs runtime..Arc Map already does this
-				
-	def processFrame(cursor, rectangle, frame, User_Field_Count, Class_List, User_Field, Fields_List): #needs to create the frame and add it using cursor if valid
-		processName = multiprocessing.current_process() #returns worker name and other status information
-		processFrame = frame + processName[20] #should return worker number and fix overwrite issue
-		arcpy.Clip_management(self.__inras,rectangle, processFrame)#create frame -> clip out a section of the main raster 
-		arcpy.AddMessage("Process " + processName[20] + " has clipped frame " + rectangle)
-		
-		
-		x = float(arcpy.GetRasterProperties_management(in_ras, "LEFT").getOutput(0))
-		y = float(arcpy.GetRasterProperties_management(in_ras, "BOTTOM").getOutput(0))
+			while(y < self.__max_y):#flow control based on raster size and requested frame size needed. Issue on edges, ask about.
+				x = float(self.__min_x) #set to left bound of in raster
+				#arcpy.AddMessage("Passed 1 while")
+				#arcpy.AddMessage("x = " +str(x))
+				#arcpy.AddMessage("max X = " +str(self.__max_x))
+				try:
+					while (x < self.__max_x): #"side to side" processing
+						#arcpy.AddMessage("Passed 2 while")				
+						rectangle = str(x) + " " + str(y) + " " + str(x + self.__frameX) + " " + str(y + self.__frameY) #bounds of our frame for the clip tool						
+						rectArray.append(rectangle) #add frame to array of frames
+						frameCount += 1 #updating processing counter, this might be broken with threading
 						
-		validFrame, validRatio = density(frame, self.__frame_ratio, self.__in_class, User_Field_Count, Class_List, User_Field, Fields_List) #run ratio function. Expect boolean T if frame meets ratio conditions, and actual ratio
-		if validFrame: #Case it passes
-			array = arcpy.Array([arcpy.Point(x, y), arcpy.Point(x, y + self.__frameY),arcpy.Point(x + self.__frameX, y + self.__frameY),arcpy.Point(x + self.__frameX, y)]) #creating the frame polygon
-			polygon = arcpy.Polygon(array)
-			lat = y+self.__frameY/2
-			long = x+self.__frameX/2
-			cursor.insertRow([polygon,validRatio, lat, long]) #add frame to feature class with calculated attributes
-			arcpy.AddMessage("Process " + processName[20] + " has found valid frame at " + rectangle)
+						arcpy.AddMessage("Frame " + frameCount + " added to queue")
+						
+						x = int(x) + int(float(self.__frameX)*Window_Overlap)#move user-determined distance to the side
 
+				except:
+					arcpy.AddMessage("Frame failed to process.")
+					error_count += 1
+				y = float(y) + int(float(self.__frameY)*Window_Overlap)#move user-determined distance up
+		except:
+			error_count += 1
+		(self.__inras,rectangle, frame)
 		
-
-			arcpy.AddMessage("Failed to process raster. Exception 1")
+		
+		arcpy.AddMessage("Processing frames") #Potential overwrite issues since same frame location.
+		pool.starmap(self.processFrame,zip(itertools.repeat(cursor),rectArray, itertools.repeat(frame), itertools.repeat(User_Field_Count), itertools.repeat(Class_List), itertools.repeat(User_Field), itertools.repeat(Fields_List)))
+		arcpy.AddMessage("Frames processed")
+		del cursor #prevent data corruption by deleting cursor when finished		 
 				
-	def processFrame(cursor, rectangle, frame, User_Field_Count, Class_List, User_Field, Fields_List): #needs to create the frame and add it using cursor if valid
+	def processFrame(self, cursor, rectangle, frame, User_Field_Count, Class_List, User_Field, Fields_List): #needs to create the frame and add it using cursor if valid
 		try:
 			processName = multiprocessing.current_process() #returns worker name and other status information
 			processFrame = frame + processName[20] #should return worker number and fix overwrite issue
@@ -181,8 +138,6 @@ def density(inras, ratio, inclass, User_Field_Count, Class_List, User_Field_Valu
 	frequency = 0 #counters
 	total = 0
 
-	#Thread for creating frames
-	#3 Threads for processing frames
 	for row in cursor: #Calculates information on each classification
 		#arcpy.AddMessage("inclass = " + str(inclass))
 		#arcpy.AddMessage("row.getValue(User_Field_Value) = " + str(row.getValue(User_Field_Value)))
