@@ -70,6 +70,6 @@ Y=xy[1]
 
 # checking to see if the user put in the right class and field name to do the rest of the code
 if Validation:
-	Parameters = Frame.classifiedRaster(input1,X,Y,Ratio,User_Class)
+	Parameters = FrameMulti.classifiedRaster(input1,X,Y,Ratio,User_Class)
 	#arcpy.AddMessage(str(input1) + " " + str(X) + " " + str(Y) + " " + str(Ratio) + " " + str(User_Class))
 	Parameters.processRaster(output, User_Field_Count , Class_List,User_Field,Fields_List,Window_Overlap)

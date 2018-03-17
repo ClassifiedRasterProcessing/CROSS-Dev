@@ -128,14 +128,11 @@ class classifiedRaster: #class definition for the frames made from the whole ras
 							#arcpy.AddMessage("Debug value...time_taken = " + str(time_taken))
 				except:
 					arcpy.AddMessage("Frame failed to process.")
-
 					error_count += 1	
 				y = float(y) + int(float(self.__frameY)*float(Window_Overlap))#move half a frame "up" ... "Fast option"	Replace 2 with a speed factor at a later point
 				#arcpy.AddMessage("Y window size"+str(y))
-
 					error_count += 1
 				y = float(y) + int(float(self.__frameY)*Window_Overlap)#move user-determined distance up
-
 		except:
 			error_count += 1
 		del cursor #prevent data corruption by deleting cursor when finished
