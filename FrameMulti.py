@@ -2,7 +2,7 @@
 #output: feature class with polygon for each frame with its determined ratio value
 
 import arcpy, collections, os, time, threading
-from multiprocessing.dummy import Pool as ThreadPool #Multithreading using map and pool
+from multiprocessing import Pool #Multithreading using map and pool
 #https://stackoverflow.com/questions/2846653/how-to-use-threading-in-python
 
 class classifiedRaster: #class definition for the frames made from the whole raster
