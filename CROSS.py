@@ -1,5 +1,4 @@
-import arcpy, FrameMulti #Comment this out and use other import if multithreading is not working
-#import arcpy, Frame
+import arcpy, Frame
 
 arcpy.env.workspace = arcpy.GetParameterAsText(0)      #this is where the files are to go
 input1= arcpy.GetParameterAsText(1)                    # this is where the feature class is put
@@ -70,6 +69,6 @@ Y=xy[1]
 
 # checking to see if the user put in the right class and field name to do the rest of the code
 if Validation:
-	Parameters = FrameMulti.classifiedRaster(input1,X,Y,Ratio,User_Class)
+	Parameters = Frame.classifiedRaster(input1,X,Y,Ratio,User_Class)
 	#arcpy.AddMessage(str(input1) + " " + str(X) + " " + str(Y) + " " + str(Ratio) + " " + str(User_Class))
 	Parameters.processRaster(output, User_Field_Count , Class_List,User_Field,Fields_List,Window_Overlap)
